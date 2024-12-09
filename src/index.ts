@@ -23,9 +23,14 @@ const onError: ErrorHandler = (err, c) => {
     ? (currentStatus as StatusCode)
     : INTERNAL_SERVER_ERROR;
 
-  console.log(currentStatus, statusCode);
+  // eslint-disable-next-line node/no-process-env
+  const env = c.env?.NODE_ENV || process.env?.NODE_ENV;
+
   return c.json({
     err: err.message,
+    stack: env === "production"
+      ? undefined
+      : err.stack,
     statusCode,
   });
 };
